@@ -14,6 +14,10 @@ defmodule Exometer.NewrelicReporter.Transformer do
   def transform({:timed, metrics}) do
     metrics |> Enum.flat_map(&transform_metric/1)
   end
+
+  def transform({"timed", metrics}) do
+    transform({:timed, metrics})
+  end
   
   # %{timed: %{"proxyHandler-handle" => %{50 => [{1487680368, 1234}]}}}
 
@@ -54,6 +58,10 @@ defmodule Exometer.NewrelicReporter.Transformer do
   def synthesize_metric({:timed, metrics}, metric_name, output_name) do
     Logger.debug "Preparing to send synthesized to New Relic: #{inspect(metrics)} as #{output_name}"
     synthesize_one(output_name, Map.get(metrics, metric_name))
+  end
+
+  def synthesize_metric({"timed", metrics}, metric_name, output_name) do
+    synthesize_metric({:timed, metrics}, metric_name, output_name)
   end
 
   def synthesize_one(output_name, values) when is_nil(values) do

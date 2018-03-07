@@ -24,7 +24,7 @@ defmodule ExometerNewrelicReporterCollectorTest do
       Collector.collect([:elixometer, :timers, :timed, "proxyHandler-handle"], key, values, %{})
     end
 
-    assert %{timed: %{"proxyHandler-handle" => timings}} = Collector.peek()
+    assert %{"timed": %{"proxyHandler-handle" => timings}} = Collector.peek()
     assert Map.keys(timings) == Map.keys(expected)
     Enum.each(timings, fn {key, values} ->
       assert [{time, value}] = values
@@ -42,7 +42,7 @@ defmodule ExometerNewrelicReporterCollectorTest do
       Collector.collect([:elixometer, :timers, :timed, "anotherMetric"], key, values, %{})
     end
 
-    assert %{timed: %{"proxyHandler-handle" => _}} = Collector.peek()
-    assert %{timed: %{"anotherMetric" => _}} = Collector.peek()
+    assert %{"timed": %{"proxyHandler-handle" => _}} = Collector.peek()
+    assert %{"timed": %{"anotherMetric" => _}} = Collector.peek()
   end
 end
